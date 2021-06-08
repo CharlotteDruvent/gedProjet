@@ -11,7 +11,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {
-
     public function load(ObjectManager $manager)
     {
 
