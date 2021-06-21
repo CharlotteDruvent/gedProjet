@@ -2,13 +2,22 @@
 
 namespace App\Entity;
 
-use App\Repository\CompanyRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CompanyRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
+ * @ApiResource(
+ *  normalizationContext={
+ *      "groups"={"companys_read"}
+ *  }
+ * )
  */
 class Company
 {
@@ -16,36 +25,46 @@ class Company
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"companys_read","workUnits_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"companys_read","workUnits_read"})
+     * @Assert\NotBlank(message="Le nom de l'entreprise est obligatoire !")
+     * @Assert\Length(min=2, minMessage="Minimum 2 caractères")
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"companys_read","workUnits_read"})
      */
     private $address;
 
     /**
      * @ORM\Column(type="string", length=180)
+     * @Groups({"companys_read"})
      */
     private $city;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"companys_read"})
      */
     private $zipCode;
 
     /**
      * @ORM\OneToMany(targetEntity=WorkUnit::class, mappedBy="company")
+     * @Groups({"companys_read"})
+     * @ApiSubresource
      */
     private $workUnit;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="companys")
+     * @Groups({"companys_read"})
      */
     private $users;
 

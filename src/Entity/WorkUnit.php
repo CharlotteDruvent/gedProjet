@@ -2,11 +2,26 @@
 
 namespace App\Entity;
 
-use App\Repository\WorkUnitRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\WorkUnitRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass=WorkUnitRepository::class)
+ * @ApiResource(
+ * subresourceOperations={
+ *   "api_companies_work_units_get_subresource"={
+ *      "normalization_context"={"groups"={"workUnits_subresource"}}
+ *   }
+ * },
+ *  normalizationContext={
+ *      "groups"={"workUnits_read"}
+ *  }
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"name":"partial"})
  */
 class WorkUnit
 {
@@ -14,21 +29,25 @@ class WorkUnit
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"workUnits_read","workUnits_subresource"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"workUnits_read","workUnits_subresource"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"workUnits_read"})
      */
     private $libelle;
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="workUnit")
+     * @Groups({"workUnits_read"})
      */
     private $company;
 
