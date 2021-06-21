@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank(message="L'email doit être renseigné !")
-     * @Assert\Email(message="L'adresse email doit avoir un format valide")
+     * @Assert\Email(message="L'adresse e-mail doit avoir un format valide")
      */
     private $email;
 
